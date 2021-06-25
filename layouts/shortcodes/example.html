@@ -1,0 +1,45 @@
+{{- $exampleName := .Get 0 -}}
+{{- $languages := .Site.Data.libraries.zmqLibraries.languages -}}
+
+{{ range $languages }}
+  {{ $exampleLang := .name }}
+  {{ range .libraries }}
+    {{ $exampleLib := .name }}
+    {{ $headlessBundle := printf "/docs/examples/%s/%s" (lower $exampleLang) (lower $exampleLib) }}
+    {{ $examples := $.Site.GetPage $headlessBundle }}
+
+    {{ $pages := $examples.Resources.ByType "page" }}
+    {{ $example := where $pages "Params.name" $exampleName }}
+    {{ if eq (len $example) 1 }}
+      {{ range $example }}
+        <div class="example-{{ lower $exampleLang }}-{{ lower $exampleLib }}">
+          {{ .Content }}
+        </div>
+      {{ end }}
+    {{ else }}
+      <div class="example-{{ lower $exampleLang }}-{{ lower $exampleLib }}">
+        <article class="message is-warn" style="margin-bottom: 1em;">
+          <div class="message-body">
+            Example <code>{{ $exampleName }}</code> is missing for <code>{{ $exampleLib }}</code>. Would you like to contribute it? Then follow the steps below:
+            <div class="highlight">
+              <pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<code class="language-sh" data-lang="sh">
+    git clone https://github.com/zeromq/zeromq.org
+    example_dir=content/docs/examples/{{ lower $exampleLang }}/{{ lower $exampleLib }}
+    cd zeromq.org && mkdir -p $example_dir
+    [ -s $example_dir/index.md ] || cat >$example_dir/index.md <<'EOF'
+---
+headless: true
+---
+EOF
+    cp archetypes/examples/{{ $exampleName }}.md
+    $example_dir/{{ lower $exampleName }}.md
+</code></pre>
+            </div>
+          </div>
+        </article>
+      </div>
+    {{ end }}
+
+  {{ end }}
+{{ end }}

@@ -1,0 +1,71 @@
+{{- $languages := .Site.Data.libraries.zmqLibraries.languages -}}
+
+<div id="zmqLibraries" class="columns is-multiline">
+{{ range $languages }}
+  {{- $languageName := .name }}
+  {{- $languageDisplayName := default .name .display }}
+  {{ range .libraries }}
+<div class="column is-half">
+  <div class="card" data-language="{{ lower $languageName }}" data-library="{{ lower .name }}">
+    <header class="card-header">
+      <p class="card-header-title">
+        {{ .name }} | {{ $languageDisplayName }}
+      </p>
+      <a href="{{ .gitUrl }}" class="card-header-icon">
+        <span class="icon">
+          <i class="fab fa-github" aria-hidden="true"></i>
+        </span>
+      </a>
+    </header>
+    <div class="card-content">
+      <div class="container">
+          <h5 class="title">{{ .description }}</h5>
+      </div>
+
+      <div class="container">
+        <div class="columns is-mobile">
+          <div class="column is-one-fifth">
+            <span class="fa-stack">
+              <i class="fas fa-circle fa-stack-2x"></i>
+              <i class="fas fa-network-wired fa-stack-1x fa-inverse"></i>
+            </span>
+          </div>
+          <div class="column">
+              {{ if .protocols }}
+                {{ .protocols }}
+              {{ else }}
+                {{- $engine := .engine}}
+                {{ range $languages }}{{ range where .libraries "name" $engine }} {{ .protocols }} {{ end }}{{ end }}
+              {{ end }}
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="columns is-mobile">
+          <div class="column is-one-fifth">
+            <span class="fa-stack">
+              <i class="fas fa-circle fa-stack-2x"></i>
+              <i class="fas fa-unlock-alt fa-stack-1x fa-inverse"></i>
+            </span>
+          </div>
+          <div class="column">
+              {{ if .security }}
+                {{ .security }}
+              {{ else }}
+                {{- $engine := .engine}}
+                {{ range $languages }}{{ range where .libraries "name" $engine }} {{ .security }} {{ end }}{{ end }}
+              {{ end }}
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <footer class="card-footer">
+      <a href="#" class="card-footer-item library-button">Choose</a>
+    </footer>
+  </div>
+</div>
+  {{ end }}
+{{ end }}
+</div>

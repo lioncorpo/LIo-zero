@@ -1,0 +1,19 @@
+{{ $isHome         := .IsHome }}
+{{ $navbarFixedTop := site.Params.navbar.fixed }}
+<!DOCTYPE html>
+<html>
+  <head>
+    {{ partial "meta.html" . }}
+    <title>{{ block "title" . }}{{ site.Title }}{{ end }}</title>
+    {{ partial "css.html" . }}
+    {{ template "_internal/google_analytics_async.html" . }}
+  </head>
+  <body class="page has-navbar-fixed-top">
+    <div class="main">
+      {{ block "main" . }}{{ end }}
+
+      {{ partial "footer.html" . }}
+    </div>
+    {{ partial "javascript.html" . }}
+  </body>
+</html>

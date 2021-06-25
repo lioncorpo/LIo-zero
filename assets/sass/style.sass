@@ -1,0 +1,367 @@
+{{- $fonts    := site.Params.fonts }}
+{{- $fontSlice := (slice) }}
+{{- range $fonts }}
+{{- $fontSlice = $fontSlice | append (printf "%s:%s" (replace .name " " "+") (delimit .sizes ",")) }}
+{{- end }}
+{{- $fontsUrl := printf "https://fonts.googleapis.com/css?family=%s" (delimit $fontSlice "|") }}
+{{- $sansSerifFont := site.Params.sansseriffont }}
+{{- $monospaceFont := site.Params.monospacefont }}
+{{- $fontAwesomeVersion := site.Params.fontawesomeversion }}
+{{- $fontAwesomeUrl     := printf "https://use.fontawesome.com/releases/v%s/css/all.css" $fontAwesomeVersion }}
+
+@charset "utf-8"
+
+// External imports
+@import url({{ $fontsUrl }})
+@import url({{ $fontAwesomeUrl }})
+
+// Project-specific colors and variables
+$twitter-blue: #1da1f2
+$gitter-purple: #753a88
+$stack-overflow-orange: #f48024
+
+@import "bulma/sass/utilities/initial-variables"
+@import "bulma/sass/utilities/functions"
+
+// Bulma variable overwrites
+$primary: #DF0000
+$dark-invert: #c01616
+$family-sans-serif: "{{ $sansSerifFont }}", BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif
+$family-code: "{{ $monospaceFont }}", monospace
+$navbar-burger-color: $primary
+$code: $primary
+$section-padding: 1.5rem
+$footer-padding:  2rem 1.5rem 2rem
+
+$link: lighten($primary, 10%)
+$link: lighten($primary, 10%)
+$link-active: darken($primary, 10%)
+
+// ZeroMQ Theme variables
+$toc-margin: 15px
+
+@import "bulma/sass/utilities/derived-variables"
+
+$colors: mergeColorMaps(("twitter-blue": ($twitter-blue, $white), "gitter-purple": ($gitter-purple, $white)), $colors)
+
+@import "bulma/bulma"
+@import "bulma-dashboard/src/bulma-dashboard"
+
+.navbar-brand
+  #logo
+    @include until($desktop)
+      position: absolute
+      left: 50%
+      transform: translate(-50%, -50%)
+      display: block
+      top: 30px
+
+  .navbar-docsToc-button
+    display: inline-block
+    vertical-align: middle
+    width: 50px
+    height: 50px
+    padding: 15px
+
+    @include from($desktop)
+      display: none
+
+    &:hover
+      background-color: rgba(0, 0, 0, 0.05)
+
+    span
+      float: left
+      height: 1px
+      position: relative
+      z-index: 1
+      background: black
+
+      &:nth-child(1), &:nth-child(2)
+        top: calc(20%)
+
+      &:nth-child(3), &:nth-child(4)
+        top: calc(45%)
+
+      &:nth-child(5), &:nth-child(6)
+        top: calc(70%)
+
+      &:nth-child(odd)
+        width: 15%
+
+      &:nth-child(even)
+        width: 75%
+        margin-left: 10%
+
+.close-button
+  position: absolute
+  top: 0
+  right: 0
+  width: 50px
+  height: 50px
+
+  &:before, &:after
+    content: ""
+    position: absolute
+    top: calc(50% - 1px)
+    left: 25%
+    width: 50%
+    height: 2px
+    background-color: black
+
+  &:before
+    transform: rotate(45deg)
+
+  &:after
+    transform: rotate(-45deg)
+
+#docsToc
+  @include until($desktop)
+    position: fixed
+    background-color: white
+    top: 0
+    left: 0
+    width: 0
+    height: 100vh
+    overflow: hidden
+    overflow-y: hidden
+    padding: 50px 0
+    z-index: 999999
+    transition: 0.3s
+
+  .close-button
+    @include from($desktop)
+      display: none
+
+.open-toc
+  #docsToc
+    @include until($desktop)
+      padding: 50px 20px
+      width: 400px
+      max-width: 100vw
+      overflow-y: auto
+
+#editPageButton
+  float: right
+
+.has-inside-label
+  $label-font-size: 10px
+
+  label
+    position: absolute
+    top: 0
+    left: 0
+    padding-top: 2px
+    padding-left: 1em
+    font-size: $label-font-size
+    z-index: 4
+
+  .select
+    height: 2.75em
+
+    select
+      height: 2.75em
+      padding-top: 0.95em
+
+  .icon
+    padding-top: 0.9em
+
+    i
+      padding-top: 0.5em
+
+.column-main
+  > section
+    max-width: 700px
+    margin-left: auto
+    margin-right: auto
+
+  #lang-lib-selector
+    margin: auto
+    .field
+        margin: 0
+
+.content
+  #TableOfContents
+    margin: $toc-margin
+
+  $header-clearance: 65px
+
+  h1, h2, h3, h4, h5, h6
+    // Make sure anchor links are showing the header
+    &:before
+      display: block
+      content: " "
+      margin-top: -$header-clearance
+      height: $header-clearance
+      visibility: hidden
+
+#languagesGrid
+  .active
+    a
+      background-color: #d20000
+      border-color: transparent
+      color: #fff
+
+#zmqLibraries
+  .active
+    box-shadow: 0 2px 3px rgba(255,19,19,1), 0 0 0 1px rgba(255,19,19,1)
+
+  .card
+    // .card-link /* This is the link of the entire card */
+    //   position: absolute
+    //   height: 100%
+    //   width: 100%
+    //   z-index: 1
+
+    .card-header
+      background-color: #DF0000
+
+      .card-header-title
+        color: white
+        margin-bottom: 0
+
+      .card-header-icon
+        color: white
+        z-index: 2
+
+        &:hover
+          color: black
+
+
+    .card-content
+      padding: 1em
+
+.hero
+  background-image: url(/images/texture.png)
+
+  .hero-foot
+    padding-bottom: 3rem
+
+  .title
+    @include until($desktop)
+      text-align: center
+
+.section
+  padding: 3rem 1.5rem 3rem 1.5rem
+
+  h1
+    margin-bottom: 1.5rem
+
+.feature
+  padding: 25px
+
+  .media-left
+    margin: auto
+
+  .media-content
+    padding-left: 25px
+
+.column-menu
+  +desktop
+    padding-left: 3rem
+
+.column-main
+  min-width: 0 !important
+  +desktop
+    border-left: 0.5px solid #cccccc
+    margin-top: 0.75rem
+
+/********************/
+/* Copy Code Button */
+/********************/
+
+.copy-code-button
+  color: #272822
+  background-color: #FFF
+  border-color: #272822
+  border: 2px solid
+  border-radius: 3px 3px 0px 0px
+
+  /* right-align */
+  display: block
+  margin-left: auto
+  margin-right: 0
+
+  margin-bottom: -2px
+  padding: 3px 8px
+  font-size: 0.8em
+
+  &:hover
+    cursor: pointer
+    background-color: #F2F2F2
+
+  &:focus
+    /* Avoid an ugly focus outline on click in Chrome,
+       but darken the button for accessibility.
+       See https://stackoverflow.com/a/25298082/1481479 */
+    background-color: #E6E6E6
+    outline: 0
+
+  &:active
+    background-color: #D9D9D9
+
+.highlight
+  /* Add bottom margin even to last element, because it maybe an included leaf page */
+  margin-bottom: 1.5rem
+
+  pre
+    /* Avoid pushing up the copy buttons. */
+    margin: 0
+
+/***********************/
+/* Floating Action Bar */
+/***********************/
+.fab-lang-lib
+  position: fixed
+  display: none
+  z-index: 400
+
+  @include from($desktop)
+    height: auto
+    width: auto
+
+    bottom: 20px
+    right: 20px
+    left: auto
+
+  @include until($desktop)
+    width: 100%
+
+    bottom: 0
+    left: 0
+
+  color: #fcfcfc
+  background: #1f1d1d
+  border: none
+  cursor: pointer
+
+  .fab-current
+    $fab-line-height: 30px
+
+    width: auto
+    height: 30px
+    line-height: $fab-line-height
+    padding: 0 6px
+    display: block
+    font-size: 90%
+    text-align: right
+
+    .fas
+      padding-left: 0.5em
+      color: $primary
+
+    .fab-current-lang-lib
+      display: inline
+      float: left
+
+    .fab-current-caret
+      display: inline
+      float: right
+      padding-left: 0.5em
+      line-height: $fab-line-height
+
+  .fab-select-lang-lib
+    font-size: 90%
+    padding: 12px
+    color: gray
+    background: lighten(#1f1d1d, 20%)
+    display: none

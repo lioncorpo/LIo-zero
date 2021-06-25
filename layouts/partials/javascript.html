@@ -1,0 +1,19 @@
+{{- $inServerMode := site.IsServer }}
+{{- $jsFiles := site.Params.js }}
+{{- range $jsFiles }}
+{{- $path := printf "js/%s.js" . }}
+{{- $js   := resources.Get $path }}
+{{- if $inServerMode }}
+<script src="{{ $js.RelPermalink }}"></script>
+{{- else }}
+{{- $prodJs := $js | minify | fingerprint }}
+<script src="{{ $prodJs.RelPermalink }}" integrity="{{ $prodJs.Data.Integrity }}"></script>
+{{- end }}
+{{- end }}
+<!-- {{ if (findRE "<div class=\"example-" .Content 1) }} -->
+<script src="/js/language-switch.js"></script>
+<!-- {{ end }} -->
+<!-- Includes 'copy-code-button.js' only if site contains a code block -->
+{{ if (findRE "<pre" .Content 1) }}
+    <script src="/js/copy-code-button.js"></script>
+{{ end }}
